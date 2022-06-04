@@ -1,46 +1,87 @@
 <template>
   <div class="container">
-    <AppHeader title="Task Tracker" />
+    <AppHeader
+      @toggle-add-task="toggleAddTask"
+      title="Task Tracker"
+      :showAddTask="showAddTask"
+    />
+    <div v-show="showAddTask">
+      <AddTask @add-task="AddTask" />
+    </div>
+
+    <AppTasks
+      @toggle-reminder="toggleReminder"
+      @delete-task="deleteTask"
+      :tasks="tasks"
+    />
   </div>
 </template>
 
 <script>
 import AppHeader from "./components/AppHeader";
+import AppTasks from "./components/AppTasks";
+import AddTask from "./components/AddTask";
 
 export default {
   name: "App",
   components: {
     AppHeader,
+    AppTasks,
+    AddTask,
   },
 
   data() {
     return {
       tasks: [],
+      showAddTask: false,
     };
   },
-
   created() {
     this.tasks = [
       {
         id: 1,
         text: "Learn Vue",
         day: "Monday",
-        reminder : false
-      }
+        reminder: false,
+      },
       {
         id: 2,
         text: "Learn Vuex",
         day: "Monday",
-        reminder : false
-      }
+        reminder: false,
+      },
       {
         id: 3,
         text: "Learn Vue Router",
         day: "Monday",
-        reminder : True
-      }
+        reminder: true,
+      },
     ];
   },
+
+  methods: {
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask;
+    },
+    AddTask(task) {
+      this.tasks = [...this.tasks, task];
+    },
+    deleteTask(id) {
+      if (confirm("Are you sure you want to delete this task?")) {
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      }
+    },
+    toggleReminder(id) {
+      this.tasks = this.tasks.map((task) => {
+        if (task.id === id) {
+          task.reminder = !task.reminder;
+        }
+        return task;
+      });
+    },
+  },
+
+  emits: ["delete-task", "toggle-reminder"],
 };
 </script>
 

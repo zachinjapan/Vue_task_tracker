@@ -1,7 +1,11 @@
 <template>
   <header>
     <h1>{{ title }}</h1>
-    <AppButton text="Add Task" color="green" />
+    <AppButton
+      @btn-click="$emit('toggle-add-task')"
+      :text="showAddTask ? 'Close' : 'Add Task'"
+      :color="showAddTask ? 'red' : 'green'"
+    />
   </header>
 </template>
 
@@ -18,6 +22,10 @@ export default {
     title: {
       type: String,
       default: "Header Prop N/A",
+    },
+    showAddTask: {
+      type: Boolean,
+      default: false,
     },
   },
 };
